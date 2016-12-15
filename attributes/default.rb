@@ -17,6 +17,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+default['telegraf']['package'] = 'telegraf'
 # version of telegraf to install, e.g. '0.10.0-1' or nil for the latest
 default['telegraf']['version'] = nil
 default['telegraf']['rubysource'] = 'https://rubygems.org'
