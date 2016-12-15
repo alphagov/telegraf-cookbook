@@ -58,7 +58,7 @@ action :create do
       raise "I do not support your platform: #{node['platform_family']}"
     end
 
-    package 'telegraf' do
+    package node['telegraf']['package'] do
       version install_version
     end
   when 'tarball'
@@ -111,7 +111,7 @@ action :delete do
     action [:stop, :disable]
   end
 
-  package 'telegraf' do
+  package node['telegraf']['package'] do
     action :remove
   end
 end
