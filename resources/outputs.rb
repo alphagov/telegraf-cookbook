@@ -23,7 +23,7 @@ property :path, String,
          default: ::File.dirname(node['telegraf']['config_file_path']) + '/telegraf.d'
 property :service_name, String, default: 'default'
 property :reload, kind_of: [TrueClass, FalseClass], default: true
-property :sensitive, kind_of: [TrueClass, FalseClass], default: false
+property :rootonly, kind_of: [TrueClass, FalseClass], default: false
 
 default_action :create
 
@@ -53,8 +53,15 @@ action :create do
     content TOML.dump('outputs' => outputs)
     user 'root'
     group 'telegraf'
-    mode new_resource.sensitive ? '0640' : '0644'
-    sensitive new_resource.sensitive
+    mode new_resource.rootonly ? '0640' : '0644'
+    sensitive new_resource.rootonly
+    notifies :restart, "service[telegraf_#{new_resource.service_name}]", :delayed if reload
+  end
+end
+
+action :delete do
+  file "#{path}/#{name}_outputs.conf" do
+    action :delete
     notifies :restart, "service[telegraf_#{new_resource.service_name}]", :delayed if reload
   end
 end
