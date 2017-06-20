@@ -26,10 +26,10 @@ property :path, String, default: node['telegraf']['config_file_path']
 default_action :create
 
 action :create do
-  chef_gem 'toml' do
+  chef_gem 'toml-rb' do
     source node['telegraf']['rubysource']
     clear_sources true
-    version '~> 0.1.2'
+    version '~> 0.3.0'
     compile_time true if respond_to?(:compile_time)
   end
 
@@ -43,7 +43,7 @@ action :create do
   end
 
   file path do
-    content TOML::Generator.new(config).body
+    content TOML.dump(config)
     user 'root'
     group 'telegraf'
     mode '0644'
